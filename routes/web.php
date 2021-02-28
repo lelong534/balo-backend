@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chats', 'ChatController@index')->name('chat');
 });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/test', 'HomeController@test')->name('test');
 Route::get('/home', 'HomeController@index')->name('home');
