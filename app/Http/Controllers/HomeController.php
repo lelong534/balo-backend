@@ -28,6 +28,6 @@ class HomeController extends Controller
     }
     public function test() {
         $users = User::get();
-        fprintf($users);
+        print_r($users);
     }
 }
