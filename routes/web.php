@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', 'ChatController@index')->name('chat');
+});
+
+Auth::routes();
+
+Route::get('/test', 'HomeController@test')->name('test');
+Route::get('/home', 'HomeController@index')->name('home');
