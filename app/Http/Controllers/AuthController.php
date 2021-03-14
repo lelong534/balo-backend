@@ -16,25 +16,28 @@ class AuthController extends Controller
     public function getToken(Request $request)
     {
 
-        $phoneNumber = $request->query("phonenumber");
-        $password = $request->query("password");
+        $phoneNumber = $request->phone_number;
+        $password = $request->password;
+
         if ($phoneNumber == "" && $password == "") {
             return [
                 "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
                 "message" => "Parameter is not enough"
             ];
         }
+
         if ($phoneNumber == $password || !str_starts_with($phoneNumber, "0")) {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                "message" => "Parameter type is invalid"
+                "message" => "Parameter type is invalid" 
             ];
         }
-        $validator = Validator::make($request->query(), [
-            'phonenumber' => 'required|digits:10',
+
+        $validator = Validator::make($request->all(), [
+            'phone_number' => 'required|digits:10',
             'password' => 'required|string|max:10|min:6',
-            'uuid' => 'required|uuid'
         ]);
+        
         if ($validator->fails()) {
             return [
                 "code" => 1003,
@@ -78,9 +81,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = [];
-        $data["phone_number"] = $request->query("phonenumber");
+        $data["phone_number"] = $request->phone_number;
 
-        $data["password"] = $request->query("password");
+        $data["password"] = $request->password;
+
         if ($data["phone_number"] == "" && $data["password"] == "") {
             return [
                 "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
@@ -99,14 +103,12 @@ class AuthController extends Controller
                 "message" => "Parameter type is invalid"
             ];
         }
-        $data["uuid"] = $request->query("uuid");
         $data["name"] = $request->query("name");
         $data["email"] = $request->query("email");
 
         $validator = Validator::make($data, [
             'phone_number' => 'required|unique:users|digits:10',
             'password' => 'required|string|max:10|min:6',
-            'uuid' => 'required'
         ]);
         if ($validator->fails()) {
             $phoneUniqueValidator = Validator::make($data, [
@@ -128,7 +130,6 @@ class AuthController extends Controller
         $user = User::makeUser([
             "phone_number" => $data["phone_number"],
             "password" => $data["password"],
-            "uuid" => $data["uuid"],
             "name" => $data["name"],
             "email" => $data["email"]
         ]);

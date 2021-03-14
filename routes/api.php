@@ -69,4 +69,4 @@ Route::post('check_verify_code', 'AuthController@checkVerifyCode')->name("check_
 
 Route::post('testSaveFile', 'UserController@testSaveFile');
 Route::post('testDeleteFile', 'UserController@testDeleveFile');
-	Route::get('test', 'PostController@test');
+Route::get('test', 'PostController@test');

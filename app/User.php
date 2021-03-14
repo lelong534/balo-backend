@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,25 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'phonenumber'
     ];
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($post) {
+    //         $post->{$post->getKeyName()} = (string) Str::uuid();
+    //     });
+    // }
+
+    // public function getIncrementing()
+    // {
+    //     return false;
+    // }
+
+    // public function getKeyType()
+    // {
+    //     return 'string';
+    // }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -153,7 +173,6 @@ class User extends Authenticatable
         $user->email = $data['email'];
         $user->name = $data["name"];
         $user->phone_number = $data["phone_number"];
-        $user->uuid = $data["uuid"];
         $user->password = Hash::make($data['password']);
         return $user;
     }
