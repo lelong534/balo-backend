@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\ApiStatusCode;
 use App\Http\Controllers\Controller;
 use App\User;
+use JWTAuth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -53,6 +55,11 @@ class AuthController extends Controller
                 "message" => "Parameter value is invalid"
             ];
         }
+
+        $credentals = request([ 'phone_number', 'password']);
+
+        $token = auth()->attempt($credentals);
+
         if ($this->checkPasswordCorrect($user, $password)) {
             $user->tokens()->delete();
             return [
@@ -61,7 +68,8 @@ class AuthController extends Controller
                 "data" => [
                     "id" => $user->id,
                     "username" => $user->name,
-                    "token" => $user->createToken(env('APP_KEY'))->plainTextToken,
+                    // "token" => $user->createToken(env('APP_KEY'))->plainTextToken,
+                    "token" => $token,
                     "avatar" => $user->avatar
                 ]
             ];
@@ -133,7 +141,7 @@ class AuthController extends Controller
             "name" => $data["name"],
             "email" => $data["email"]
         ]);
-        $user->save();
+        $user->save(); 
         return [
             "code" => 1000,
             "message" => "OK"

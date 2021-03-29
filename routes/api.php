@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'user-blocked'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function () {
+    Route::post('/user', function (Request $request) {
+        return auth()->user();
     });
     Route::post('/user/settings', "SettingsController@setPushSetting")->name("set_push_settings");
     Route::get('/user/notifications', "UserController@getNotifications")->name("get_notification");
@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum', 'user-blocked'])->group(function () {
 
     Route::post('add_post', 'PostController@addPost')->name("add_post");
     Route::post('edit_post/{id}', 'PostController@editPost')->name("edit_post");
-    Route::get('get_post', 'PostController@getPost')->name("get_post");
+    Route::post('get_post', 'PostController@getPost')->name("get_post");
     Route::post('delete_post', 'PostController@deletePost')->name("delete_post");
     Route::get('get_list_posts', 'PostController@getListPost')->name("get_list_posts");
     Route::get('check_new_item', 'PostController@checkNewItem')->name("check_new_item");

@@ -221,15 +221,9 @@ class UserController extends Controller
         }
     }
 
-    public function getInfo(Request $request, $id)
+    public function getInfo(Request $request)
     {
         $user = $request->user();
-        if ($user->id != $id) {
-            return [
-                "code" => ApiStatusCode::NOT_VALIDATE,
-                "message" => "User is not validated"
-            ];
-        }
         if ($user == null) {
             return [
                 "code" => 9994,

@@ -8,6 +8,7 @@ use App\Image;
 use App\Video;
 use App\Comment;
 use App\User;
+use JWTAuth;
 use App\Enums\ApiStatusCode;
 use App\Enums\URL;
 use Illuminate\Support\Facades\Validator;
@@ -337,13 +338,14 @@ class PostController extends Controller
 
     public function getPost(Request $request) {
 
-        $post_id = $request->query('id');
+        $post_id = $request->id;
     	$post = Post::where('id', $post_id)->first();
 
         if (!$post) {
             return response()->json([
                 'code' => ApiStatusCode::NOT_EXISTED, 
                 'message' => 'Bài viết không tồn tại',
+                'post_id' => $post_id
             ]);
         }
         $images = $post->images;
