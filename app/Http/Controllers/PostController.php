@@ -396,10 +396,10 @@ class PostController extends Controller
         $in_campaign = $request->in_campaign;
         $campaign_id = $request->campaign_id;
         $last_id = $request->last_id;
-        $index = $request->index;
-        $count = $request->count;
+        $index = (int)$request->index;
+        $count = (int)$request->count;
 
-        $list_posts = Post::where('id', '>', $last_id)
+        $list_posts = Post::where('id', '>', $index)
                         ->orderBy('id', 'desc')
                         ->limit($count)
                         ->get();                        

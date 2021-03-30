@@ -22,11 +22,11 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::get('/user/notifications', "UserController@getNotifications")->name("get_notification");
     Route::post('/user/notifications', "UserController@setReadNotification")->name("set_read_notification");
     Route::get('/user/settings', "SettingsController@getPushSetting")->name("get_push_settings");
-    Route::get('/user/get_requested_friends', "UserController@getRequestedFriends")->name("get_requested_friends");
+    Route::post('/user/get_requested_friends', "UserController@getRequestedFriends")->name("get_requested_friends");
     Route::post('/user/set_request_friend', "UserController@setRequestFriends")->name("set_request_friend");
-    Route::get('/user/friends', "UserController@getFriends")->name("get_user_friends");
+    Route::post('/user/friends', "UserController@getFriends")->name("get_user_friends");
     Route::get('/user/get_list_suggested_friends', "UserController@getSuggestedFriends")->name("get_list_suggested_friends");
-    Route::post('/user/friends', "UserController@setFriends")->name("set_accept_friend");
+    Route::post('/user/set_accept_friend', "UserController@setFriends")->name("set_accept_friend");
     Route::post("/logout", 'AuthController@logout')->name("Logout");
     Route::post("/change_password", "AuthController@changePassword")->name("change_password");
     Route::post("/device", "DeviceController@setDeviceInfo")->name("set_devtoken");
@@ -38,7 +38,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('edit_post/{id}', 'PostController@editPost')->name("edit_post");
     Route::post('get_post', 'PostController@getPost')->name("get_post");
     Route::post('delete_post', 'PostController@deletePost')->name("delete_post");
-    Route::get('get_list_posts', 'PostController@getListPost')->name("get_list_posts");
+    Route::post('get_list_posts', 'PostController@getListPost')->name("get_list_posts");
     Route::get('check_new_item', 'PostController@checkNewItem')->name("check_new_item");
 
     Route::post("/set_user_info", "UserController@setUserInfo")->name("set_user_info");

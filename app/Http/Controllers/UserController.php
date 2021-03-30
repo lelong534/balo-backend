@@ -28,8 +28,8 @@ class UserController extends Controller
         $count = $request->count;
         if ($index == '' || $count == '') {
             return [
-                "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                "message" => "PARAMETER TYPE INVALID"
+                "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
+                "message" => "Parameter not enough"
             ];
         } else {
             $user = $request->user();
@@ -46,7 +46,7 @@ class UserController extends Controller
                     "created" => $item->created_at,
                 ]);
             };
-            $result = array_slice($result, $count * $index, $count);
+            $result = array_slice($result, $index, $count);
             return [
                 "code" => ApiStatusCode::OK,
                 "message" => "OK",
@@ -60,12 +60,12 @@ class UserController extends Controller
 
     public function getFriends(Request $request)
     {
-        $index = $request->query("index");
-        $count = $request->query("count");
+        $index = $request->index;
+        $count = $request->count;
         if ($index == '' || $count == '') {
             return [
-                "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                "message" => "PARAMETER TYPE INVALID"
+                "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
+                "message" => "Parameter not enough"
             ];
         } else {
             $user = $request->user();
@@ -95,8 +95,8 @@ class UserController extends Controller
 
     public function getSuggestedFriends(Request $request)
     {
-        $index = $request->query("index");
-        $count = $request->query("count");
+        $index = $request->index;
+        $count = $request->count;
         if ($index == '' || $count == '') {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
@@ -135,7 +135,7 @@ class UserController extends Controller
 
     public function setRequestFriends(Request $request)
     {
-        $user_id = $request->query("user_id");
+        $user_id = $request->user_id;
         $user = $request->user();
         if ($user_id == '' || $user->id == (int)$user_id || (int)$user_id < 0) {
             return [
@@ -180,14 +180,16 @@ class UserController extends Controller
     public function setFriends(Request $request)
     {
         $user = $request->user();
-        if ($request->query("user_id") == '' || $request->query("is_accept") == '') {
+        $user_id = (int)$request->user_id;
+        $is_accep = (int)$request->accept_id;
+        if ($user_id == '' || $is_accept == '') {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
                 "message" => "PARAMETER TYPE INVALID"
             ];
         }
         $friends = Friends::where("user_id", $user->id)
-            ->where("friend_id", (int)$request->query("user_id"))->get();
+            ->where("friend_id", $user_id)->get();
         if ($friends->isEmpty()) {
             return [
                 "code" => ApiStatusCode::NOT_EXISTED,
@@ -200,7 +202,6 @@ class UserController extends Controller
             ];
         } else {
             $relation = $friends[0];
-            $is_accept = (int)$request->query("is_accept");
             if ($is_accept == 0 || $is_accept == 1) {
                 if ($is_accept == 0) {
                     $relation->delete();
