@@ -24,8 +24,8 @@ class UserController extends Controller
 
     public function getRequestedFriends(Request $request)
     {
-        $index = $request->query("index");
-        $count = $request->query("count");
+        $index = $request->index;
+        $count = $request->count;
         if ($index == '' || $count == '') {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,

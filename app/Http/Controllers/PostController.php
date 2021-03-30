@@ -12,6 +12,7 @@ use JWTAuth;
 use App\Enums\ApiStatusCode;
 use App\Enums\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -105,12 +106,14 @@ class PostController extends Controller
             if($request->hasFile('image')) {
 				$i = 1;
 				foreach ($request->file('image') as $image) {
-					$image->storeAs('image', $image->getClientOriginalName());
-					// $filename = $image->getClientOriginalName(); 
+					// $image->storeAs('image', $image->getClientOriginalName());
+                    $imageName = $image->store("", "google");
+                    $imageUrl = Storage::disk('google')->url($imageName);
 					
 		        	$saveImage = new Image([
 			        	'post_id' => $post->id,
-			        	'link' => $image->getClientOriginalName(),
+			        	// 'link' => $image->getClientOriginalName(),
+                        'link' => $imageUrl,
 			        	'image_sort' => $i
 			        ]);
 			        if ( $saveImage->save() ) {
@@ -125,14 +128,14 @@ class PostController extends Controller
             }
 
             if($request->hasFile('video')) {
-                $i = 1;
                 $video = $request->file('video');
-                $video->storeAs('video', $video->getClientOriginalName());
-                // $filename = $image->getClientOriginalName(); 
+                // $video->storeAs('video', $video->getClientOriginalName());
+                $videoName = $video->store("", "google");
+                $videoUrl  = Storage::disk('google')->url($videoName);
                 
                 $saveVideo = new Video([
                     'post_id' => $post->id,
-                    'link' => $video->getClientOriginalName(),
+                    'link' => $videoUrl,
                 ]);
                 if ( !$saveVideo->save() ) {
                     return response()->json([
@@ -275,12 +278,14 @@ class PostController extends Controller
             if($request->hasFile('image')) {
                 $i = 1;
                 foreach ($request->file('image') as $image) {
-                    $image->storeAs('image', $image->getClientOriginalName());
-                    // $filename = $image->getClientOriginalName(); 
+                    // $image->storeAs('image', $image->getClientOriginalName());
+                    $imageName = $image->store("", "google");
+                    $imageUrl = Storage::disk('google')->url($imageName);
                     
                     $saveImage = new Image([
                         'post_id' => $post->id,
-                        'link' => $image->getClientOriginalName(),
+                        // 'link' => $image->getClientOriginalName(),
+                        'link' => $imageUrl,
                         'image_sort' => $i
                     ]);
                     if ( $saveImage->save() ) {
@@ -300,14 +305,13 @@ class PostController extends Controller
                     $item['post_id'] = '';
                     $item->save();
                 }
-                $i = 1;
                 $video = $request->file('video');
-                $video->storeAs('video', $video->getClientOriginalName());
-                // $filename = $image->getClientOriginalName(); 
+                $videoName = $video->store("", "google");
+                $videoUrl  = Storage::disk('google')->url($videoName);
                 
                 $saveVideo = new Video([
                     'post_id' => $post->id,
-                    'link' => $video->getClientOriginalName(),
+                    'link' => $videoUrl,
                 ]);
                 if ( !$saveVideo->save() ) {
                     return response()->json([
@@ -370,7 +374,7 @@ class PostController extends Controller
 
     public function deletePost(Request $request) {
 
-        $post_id = $request->query('id');
+        $post_id = $request->id;
     	$post = Post::where('id', $post_id)->first();
 
         if (!$post) {
@@ -388,15 +392,12 @@ class PostController extends Controller
     }
 
     public function getListPost(Request $request) {
-        $token = $request->query('token');
-        $user_id = $request->query('user_id');
-        $in_campaign = $request->query('in_campaign');
-        $campaign_id = $request->query('campaign_id');
-        $latitude = $request->query('latitude');
-        $longtitude = $request->query('longtitude');
-        $last_id = $request->query('last_id');
-        $index = $request->query('index');
-        $count = $request->query('count');
+        $user_id = $request->user_id;
+        $in_campaign = $request->in_campaign;
+        $campaign_id = $request->campaign_id;
+        $last_id = $request->last_id;
+        $index = $request->index;
+        $count = $request->count;
 
         $list_posts = Post::where('id', '>', $last_id)
                         ->orderBy('id', 'desc')
@@ -415,8 +416,8 @@ class PostController extends Controller
     }
 
     public function checkNewItem(Request $request) {
-        $last_id = $request->query('last_id');
-        $category_id = $request->query('category_id');
+        $last_id = $request->last_id;
+        $category_id = $request->category_id;
 
         $list_posts = Post::where('id', '>', $last_id)
                         ->orderBy('id', 'desc')

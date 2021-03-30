@@ -61,6 +61,10 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('del_saved_search', 'SearchController@delSavedSearch')->name("del_saved_search");
 
     Route::post('get_list_videos', 'VideoController@getListVideos')->name("get_list_videos");
+
+    Route::post('test', function() {
+        Storage::disk('google')->put('test.txt', 'Hello World');
+    });
 });
 
 Route::post('login', 'AuthController@getToken')->name("Login");
