@@ -364,6 +364,11 @@ class UserController extends Controller
     public function changeInfoAfterSignup(Request $request)
     {
         $user = $request->user();
+        $username = $request->username;
+        $description = $request->description;
+        $address = $request->address;
+        $phonenumber = $request->phonenumber;
+
         $fileValidator = Validator::make($request->all(), [
             'avatar' => 'file|max:1024',
         ]);
@@ -372,22 +377,24 @@ class UserController extends Controller
                 "code" => 1006,
                 "message" => "File size is too big",
             ];
-        } else if (strcmp($user->phone_number, $request->query("username")) == 0) {
+        } else if (strcmp($user->phone_number, $request->username) == 0) {
             return [
                 "code" => 1004,
                 "message" => "User name is invalid",
             ];
         } else {
-            $user->name = $request->query("username");
-            if ($request->file("avatar") != null) {
-                $linkAvatar = $this->fileService->saveFile($request->file("avatar"));
-                if ($user->avatar != null) {
-                    $this->fileService->deleteFile($user->avatar);
-                };
-                $user->avatar = $linkAvatar;
-            } else {
-                $linkAvatar = "";
+            $user->name = $request->username;
+            $user->phone_number = $phonenumber;
+            $user->description = $description;
+            $user->address = $address;
+            $avatar = $request->file("avatar");
+
+            if ($avatar != null) {
+                $avatarName = $avatar->store("", "google");
+                $avatarUrl  = Storage::disk('google')->url($avatarName);
+                $user->avatar = $avatarUrl;
             }
+
             $user->save();
             return [
                 "code" => 1000,
@@ -395,9 +402,10 @@ class UserController extends Controller
                 "data" => [
                     "id" => $user->id,
                     "username" => $user->name,
-                    "phonenumber" => $user["phone_number"],
-                    "created" => $user["created_at"],
-                    "avatar" => Storage::url($linkAvatar),
+                    "phonenumber" => $user->phone_number,
+                    "address" => $user->address,
+                    "description" => $user->description,
+                    "avatar" => $user->avatar,
                 ]
             ];
         }

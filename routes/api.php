@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function () {
-    Route::post('/user', function (Request $request) {
+    Route::post('/user/get_user_info', function (Request $request) {
         return auth()->user();
     });
     Route::post('/user/settings', "SettingsController@setPushSetting")->name("set_push_settings");
@@ -23,19 +23,19 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('/user/notifications', "UserController@setReadNotification")->name("set_read_notification");
     Route::get('/user/settings', "SettingsController@getPushSetting")->name("get_push_settings");
     Route::post('/user/get_requested_friends', "UserController@getRequestedFriends")->name("get_requested_friends");
-    Route::post('/user/set_request_friend', "UserController@setRequestFriends")->name("set_request_friend");
-    Route::post('/user/friends', "UserController@getFriends")->name("get_user_friends");
+    Route::post('/user/set_request_friends', "UserController@setRequestFriends")->name("set_request_friend");
+    Route::post('/user/get_user_friends', "UserController@getFriends")->name("get_user_friends");
     Route::get('/user/get_list_suggested_friends', "UserController@getSuggestedFriends")->name("get_list_suggested_friends");
     Route::post('/user/set_accept_friend', "UserController@setFriends")->name("set_accept_friend");
     Route::post("/logout", 'AuthController@logout')->name("Logout");
     Route::post("/change_password", "AuthController@changePassword")->name("change_password");
     Route::post("/device", "DeviceController@setDeviceInfo")->name("set_devtoken");
-    Route::get("user/block", "UserController@getBlock")->name("get_list_blocks");
+    Route::get("/user/block", "UserController@getBlock")->name("get_list_blocks");
     Route::get("/user", "UserController@getInfo")->name("get_user_info");
-    Route::post('change_info_after_signup', 'UserController@changeInfoAfterSignup')->name("change_info_after_signup");
+    Route::post('/user/change_user_info', 'UserController@changeInfoAfterSignup')->name("change_user_info");
 
     Route::post('add_post', 'PostController@addPost')->name("add_post");
-    Route::post('edit_post/{id}', 'PostController@editPost')->name("edit_post");
+    Route::post('edit_post', 'PostController@editPost')->name("edit_post");
     Route::post('get_post', 'PostController@getPost')->name("get_post");
     Route::post('delete_post', 'PostController@deletePost')->name("delete_post");
     Route::post('get_list_posts', 'PostController@getListPost')->name("get_list_posts");
@@ -50,8 +50,8 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('messages/delete_conversation', 'ChatController@deleteConversation')->name("delete_conversation");
     Route::get('message/{userId2}', 'ChatController@fetchAllMessages');
     Route::post('message/{userId2}', 'ChatController@sendMessage');
-    Route::post('report/{id}', 'UserReportPostController@reportPost')->name("report_post");
-    Route::post('like/add/{post_id}', 'UserLikePostController@likePost')->name("like_post");
+    Route::post('report_post', 'UserReportPostController@reportPost')->name("report_post");
+    Route::post('like', 'UserLikePostController@likePost')->name("like_post");
     Route::get('comment/{id}', 'CommentController@getComment')->name("get_comment");
     Route::post('comment/add/{id}', 'CommentController@addComment')->name("set_comment");
     Route::post("user/block/{user_id}", "UserController@setBlock")->name("set_block");
@@ -68,7 +68,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
 });
 
 Route::post('login', 'AuthController@getToken')->name("Login");
-Route::post('register', 'AuthController@register')->name("Signup");
+Route::post('signup', 'AuthController@register')->name("Signup");
 Route::post('check_verify_code', 'AuthController@checkVerifyCode')->name("check_verify_code");
 
 Route::post('testSaveFile', 'UserController@testSaveFile');

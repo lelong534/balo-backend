@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Validator;
 class UserLikePostController extends Controller
 {
     //
-    public function likePost(Request $request, $post_id)
+    public function likePost(Request $request)
     {
+        $post_id = $request->id;
         $user = $request->user();
         if (UserLikePost::where("user_id", $user->id)->where("post_id", $post_id)->exists()) return [
             "code" => ApiStatusCode::NO_DATA,
@@ -54,8 +55,9 @@ class UserLikePostController extends Controller
         );
     }
 
-    public function getlikePost($id)
+    public function getlikePost(Request $request)
     {
+        $id = $request->id;
         $post = Post::where('id', $id)->first();
         $like = UserLikePost::where('post_id', $id)->count();
 

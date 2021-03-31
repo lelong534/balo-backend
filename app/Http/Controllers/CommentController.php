@@ -13,9 +13,11 @@ use DB;
 
 class CommentController extends Controller
 {
-    public function addComment(Request $request, $id)
+    public function addComment(Request $request)
     {
-        $validator = Validator::make($request->query(), [
+        $id = $request->id;
+
+        $validator = Validator::make($request->all(), [
             'described' => 'required'
         ]);
 
@@ -73,10 +75,13 @@ class CommentController extends Controller
         );
     }
 
-    public function getComment($id)
+    public function getComment(Request $request)
     {
+        $id = $request->id;
         $post = Post::where('id', $id)->first();
-        $comments = Comment::where('post_id', $id)->get();
+        $comments = Comment::where('post_id', $id)
+                    ->orderBy('update_at', 'asc')
+                    ->get();
         foreach ($comments as $comment) {
             $author = User::where('id', $comment["user_id"])->get()[0];
             $comment['author'] = [
@@ -103,8 +108,9 @@ class CommentController extends Controller
         }
     }
 
-    public function deleteComment($id)
+    public function deleteComment(Request $request)
     {
+        $id = $request->id;
         $comment = Comment::where('id', $id)->first();
 
         if ($comment->delete()) {

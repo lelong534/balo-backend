@@ -17,7 +17,6 @@ class AuthController extends Controller
 {
     public function getToken(Request $request)
     {
-
         $phoneNumber = $request->phone_number;
         $password = $request->password;
 

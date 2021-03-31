@@ -164,7 +164,9 @@ class PostController extends Controller
         );
     }
 
-    public function editPost(Request $request, $id) {
+    public function editPost(Request $request) {
+
+        $post_id = (int)$request->post_id;
 
         $validator = Validator::make($request->all(), [
             'video' => 'max:10000|nullable',
@@ -256,24 +258,14 @@ class PostController extends Controller
         //==== end ====//
 
         $post['described'] = $request['described'];
-
-        $images = $post->images;
-        foreach($images as $image) {
-            $image->delete();
-        }
-
-        $videos = $post->videos;
-        foreach($videos as $video) {
-            $video->delete();
-        }
-
+        
         if ($post->save()) {
             // nếu không có file nào vi phạm validate thì tiến hành lưu DB
             $saveImage = Image::where('post_id', $post_id)->get();
-            foreach($item as $saveImage) {
-                $item['post_id'] = '';
-                $item->save();
-            }
+            // foreach($saveImage as $item) {
+            //     $item['post_id'] = '';
+            //     $item->save();
+            // }
 
             if($request->hasFile('image')) {
                 $i = 1;
@@ -283,7 +275,7 @@ class PostController extends Controller
                     $imageUrl = Storage::disk('google')->url($imageName);
                     
                     $saveImage = new Image([
-                        'post_id' => $post->id,
+                        'post_id' => $post_id,
                         // 'link' => $image->getClientOriginalName(),
                         'link' => $imageUrl,
                         'image_sort' => $i
@@ -325,10 +317,6 @@ class PostController extends Controller
                 [
                     'code' => ApiStatusCode::OK,
                     'message' => 'Chỉnh sửa bài viết thành công',
-                    'data' => [
-                        'id' => $post->id,
-                        'url' => URL::ADDRESS . '/posts/' . $post->id
-                    ]
                 ]
             );
         }
@@ -399,7 +387,9 @@ class PostController extends Controller
         $index = (int)$request->index;
         $count = (int)$request->count;
 
-        $list_posts = Post::where('id', '>', $index)
+        $list_posts = Post::with('images')
+                        ->with('videos')
+                        ->where('id', '>', $index)
                         ->orderBy('id', 'desc')
                         ->limit($count)
                         ->get();                        
