@@ -20,6 +20,10 @@ class Post extends Model
     public function videos() {
    		return $this->hasMany('App\Video', 'post_id', 'id');
     }
+
+    public function author() {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 }
 
 

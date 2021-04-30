@@ -386,14 +386,27 @@ class PostController extends Controller
         $last_id = $request->last_id;
         $index = (int)$request->index;
         $count = (int)$request->count;
-
-        $list_posts = Post::with('images')
+        $list_posts = null;
+        
+        if($user_id !== null) {
+            $list_posts = Post::with('images', 'author')
+                        ->with('videos')
+                        ->where('user_id', $user_id)
+                        ->where('id', '>', $index)
+                        ->orderBy('updated_at', 'desc')
+                        ->limit($count)
+                        ->get();
+        } else {
+            $list_posts = Post::with('images', 'author')
                         ->with('videos')
                         ->where('id', '>', $index)
-                        ->orderBy('id', 'desc')
+                        ->orderBy('updated_at', 'desc')
                         ->limit($count)
-                        ->get();                        
-        $new_last_id = $list_posts->first()->id;
+                        ->get();
+        }
+        if (!$list_posts)
+            $new_last_id = $list_posts->first()->id;
+        else $new_last_id = $last_id === null ? 0 : $last_id;
 
         return response()->json([
             'code' => ApiStatusCode::OK,
