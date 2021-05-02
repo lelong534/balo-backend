@@ -412,6 +412,14 @@ class PostController extends Controller
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
                         ->get();
+            foreach($list_posts as $key => $postItem) {
+                $postItem["isLiked"] = false;
+                $like_post = $postItem["likes"];
+                foreach ($like_post as $userLike) {
+                    if($userLike["user_id"] == $user->id) $postItem["isLiked"] = true;
+                    break;
+                }
+            }
         }
         if (!$list_posts)
             $new_last_id = $list_posts->first()->id;
