@@ -380,6 +380,7 @@ class PostController extends Controller
     }
 
     public function getListPost(Request $request) {
+        $user = $request->user();
         $user_id = $request->user_id;
         $in_campaign = $request->in_campaign;
         $campaign_id = $request->campaign_id;
@@ -389,15 +390,23 @@ class PostController extends Controller
         $list_posts = null;
         
         if($user_id !== null) {
-            $list_posts = Post::with('images', 'author')
+            $list_posts = Post::with('images', 'author', 'likes')
                         ->with('videos')
                         ->where('user_id', $user_id)
                         ->where('id', '>', $index)
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
                         ->get();
+            foreach($list_posts as $key => $postItem) {
+                $postItem["isLiked"] = false;
+                $like_post = $postItem["likes"];
+                foreach ($like_post as $userLike) {
+                    if($userLike["user_id"] == $user->id) $postItem["isLiked"] = true;
+                    break;
+                }
+            }
         } else {
-            $list_posts = Post::with('images', 'author')
+            $list_posts = Post::with('images', 'author', 'likes')
                         ->with('videos')
                         ->where('id', '>', $index)
                         ->orderBy('updated_at', 'desc')

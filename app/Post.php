@@ -24,6 +24,10 @@ class Post extends Model
     public function author() {
         return $this->belongsTo('App\User', 'user_id', 'id');
     }
+
+    public function likes() {
+        return $this->hasMany('App\UserLikePost', 'post_id', 'id');
+    }
 }
 
 
