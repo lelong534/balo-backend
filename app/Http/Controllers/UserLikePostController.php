@@ -65,6 +65,9 @@ class UserLikePostController extends Controller
             "message" => "Chưa thích bài viết",
         ];
         if ($userLikePost->delete()) {
+            $post = Post::find($post_id);
+            $post->like -= 1;
+            $post->save();
             return response()->json([
                 'code' => ApiStatusCode::OK,
                 'message' => 'Đã bỏ thích bài viết'
