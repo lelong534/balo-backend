@@ -62,7 +62,7 @@ class UserLikePostController extends Controller
         $userLikePost = UserLikePost::where("user_id", $user->id)->where("post_id", $post_id)->first();
         if (!$userLikePost) return [
             "code" => 9992,
-            "message" => "Chưa thích bài viết"
+            "message" => "Chưa thích bài viết",
         ];
         if ($userLikePost->delete()) {
             return response()->json([
