@@ -52,6 +52,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('message/{userId2}', 'ChatController@sendMessage');
     Route::post('report_post', 'UserReportPostController@reportPost')->name("report_post");
     Route::post('like', 'UserLikePostController@likePost')->name("like_post");
+    Route::post('unLike', 'UserLikePostController@unLikePost')->name("un_like_post");
     Route::get('comment/{id}', 'CommentController@getComment')->name("get_comment");
     Route::post('comment/add/{id}', 'CommentController@addComment')->name("set_comment");
     Route::post("user/block/{user_id}", "UserController@setBlock")->name("set_block");

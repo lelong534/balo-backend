@@ -55,6 +55,23 @@ class UserLikePostController extends Controller
         );
     }
 
+    public function unLikePost(Request $request)
+    {
+        $post_id = $request->id;
+        $user = $request->user();
+        $userLikePost = UserLikePost::where("user_id", $user->id)->where("post_id", $post_id)->first();
+        if (!$userLikePost) return [
+            "code" => 9992,
+            "message" => "Chưa thích bài viết"
+        ];
+        if ($userLikePost->delete()) {
+            return response()->json([
+                'code' => ApiStatusCode::OK,
+                'message' => 'Đã bỏ thích bài viết'
+            ]);
+        }
+    }
+
     public function getlikePost(Request $request)
     {
         $id = $request->id;
