@@ -16,9 +16,10 @@ class CommentController extends Controller
     public function addComment(Request $request)
     {
         $id = $request->id;
+        $content = $request->content;
 
         $validator = Validator::make($request->all(), [
-            'described' => 'required'
+            'content' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -28,23 +29,12 @@ class CommentController extends Controller
                 'data' => $validator->errors()
             ]);
         } else {
-            $validator = Validator::make($request->query(), [
-                'described' => 'string'
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'code' => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                    'message' => 'Kiểu tham số không đúng đắn',
-                    'data' => $validator->errors()
-                ]);
-            } else {
-                $post = Post::find($id);
-                if ($post == null) {
-                    return [
-                        "code" => 9992,
-                        "message" => "Bài viết không tồn tại"
-                    ];
-                }
+            $post = Post::find($id);
+            if ($post == null) {
+                return [
+                    "code" => 9992,
+                    "message" => "Bài viết không tồn tại"
+                ];
             }
         }
         $user_id = $request->user()->id;
@@ -52,7 +42,7 @@ class CommentController extends Controller
         $comment = new Comment([
             'user_id' => $user_id,
             'post_id' => $id,
-            'content' => $request->query("described"),
+            'content' => $content,
 
         ]);
         if ($comment->save()) {
@@ -63,7 +53,7 @@ class CommentController extends Controller
                     'data' => [
                         'user_id' => $comment->user_id,
                         'post_id' => $id,
-                        'content' => $request->query("described")
+                        'content' => $content
                     ]
                 ]
             );
