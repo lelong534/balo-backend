@@ -53,8 +53,8 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('report_post', 'UserReportPostController@reportPost')->name("report_post");
     Route::post('like', 'UserLikePostController@likePost')->name("like_post");
     Route::post('un_like', 'UserLikePostController@unLikePost')->name("un_like_post");
-    Route::get('comment/{id}', 'CommentController@getComment')->name("get_comment");
-    Route::post('comment/add/{id}', 'CommentController@addComment')->name("set_comment");
+    Route::get('comment', 'CommentController@getComment')->name("get_comment");
+    Route::post('comment/add', 'CommentController@addComment')->name("set_comment");
     Route::post("user/block/{user_id}", "UserController@setBlock")->name("set_block");
 
     Route::post('search', 'SearchController@search')->name("search");
