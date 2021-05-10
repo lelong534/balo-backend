@@ -371,6 +371,7 @@ class UserController extends Controller
 
         $fileValidator = Validator::make($request->all(), [
             'avatar' => 'file|max:1024',
+            'background_image' => 'file|max:1024'
         ]);
         if ($fileValidator->fails()) {
             return [
@@ -380,35 +381,84 @@ class UserController extends Controller
         } else if (strcmp($user->phone_number, $request->username) == 0) {
             return [
                 "code" => 1004,
-                "message" => "User name is invalid",
+                "message" => "Tên người dùng không được trùng số điện thoại",
             ];
-        } else {
-            $user->name = $request->username;
-            $user->phone_number = $phonenumber;
-            $user->description = $description;
-            $user->address = $address;
-            $avatar = $request->file("avatar");
+        } 
 
-            if ($avatar != null) {
-                $avatarName = $avatar->store("", "google");
-                $avatarUrl  = Storage::disk('google')->url($avatarName);
-                $user->avatar = $avatarUrl;
-            }
+        $user->name = $request->username;
+        $user->phone_number = $phonenumber;
+        $user->description = $description;
+        $user->address = $address;
+        $avatar = $request->file("avatar");
+        $background = $request->file("background_image");
 
-            $user->save();
-            return [
-                "code" => 1000,
-                "message" => "OK",
-                "data" => [
-                    "id" => $user->id,
-                    "username" => $user->name,
-                    "phonenumber" => $user->phone_number,
-                    "address" => $user->address,
-                    "description" => $user->description,
-                    "avatar" => $user->avatar,
-                ]
-            ];
+        // kiểm tra xem có file ảnh không
+        if ($request->hasFile('avatar')) {
+            $allowedfileExtension = ['jpg', 'png'];
+            $files = $request->file('avatar');
+
+            // flag xem có thực hiện lưu DB không. Mặc định là có
+            // $exe_flg = true;
+            // kiểm tra tất cả các files xem có đuôi mở rộng đúng không
+            $extension = $files->getClientOriginalExtension();
+            $check = in_array($extension, $allowedfileExtension);
+
+            if (!$check) {
+                // nếu có file nào không đúng đuôi mở rộng thì đổi flag thành false
+                // $exe_flg = false;
+                return response()->json([
+                    'code' => ApiStatusCode::PARAMETER_TYPE_INVALID,
+                    'message' => 'File ảnh không đúng định dạng',
+                ]);
+            } 
         }
+
+        if ($request->hasFile('background_image')) {
+            $allowedfileExtension = ['jpg', 'png'];
+            $files = $request->file('background_image');
+
+            // flag xem có thực hiện lưu DB không. Mặc định là có
+            // $exe_flg = true;
+            // kiểm tra tất cả các files xem có đuôi mở rộng đúng không
+            $extension = $files->getClientOriginalExtension();
+            $check = in_array($extension, $allowedfileExtension);
+
+            if (!$check) {
+                // nếu có file nào không đúng đuôi mở rộng thì đổi flag thành false
+                // $exe_flg = false;
+                return response()->json([
+                    'code' => ApiStatusCode::PARAMETER_TYPE_INVALID,
+                    'message' => 'File ảnh không đúng định dạng',
+                ]);
+            } 
+        }
+
+        if ($avatar != null) {
+            $avatarName = $avatar->store("", "google");
+            $avatarUrl  = Storage::disk('google')->url($avatarName);
+            $user->avatar = $avatarUrl;
+        }
+
+        if ($background != null) {
+            $backgroundName = $background->store("", "google");
+            $backgroundUrl  = Storage::disk('google')->url($backgroundName);
+            $user->background_image = $backgroundUrl;
+        }
+
+        $user->save();
+        return [
+            "code" => 1000,
+            "message" => "OK",
+            "data" => [
+                "id" => $user->id,
+                "username" => $user->name,
+                "phonenumber" => $user->phone_number,
+                "address" => $user->address,
+                "description" => $user->description,
+                "avatar" => $user->avatar,
+                "background_image" => $user->background_image
+            ]
+        ];
     }
 
     public function getBlock(Request $request)

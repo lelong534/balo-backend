@@ -32,7 +32,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post("/device", "DeviceController@setDeviceInfo")->name("set_devtoken");
     Route::get("/user/block", "UserController@getBlock")->name("get_list_blocks");
     Route::get("/user", "UserController@getInfo")->name("get_user_info");
-    Route::post('/user/change_user_info', 'UserController@changeInfoAfterSignup')->name("change_user_info");
+    Route::post('/change_user_info', 'UserController@changeInfoAfterSignup')->name("change_user_info");
 
     Route::post('add_post', 'PostController@addPost')->name("add_post");
     Route::post('edit_post', 'PostController@editPost')->name("edit_post");
