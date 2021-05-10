@@ -371,7 +371,7 @@ class UserController extends Controller
 
         $fileValidator = Validator::make($request->all(), [
             'avatar' => 'file|max:1024',
-            'background_image' => 'file|max:1024'
+            'cover_image' => 'file|max:1024'
         ]);
         if ($fileValidator->fails()) {
             return [
@@ -390,7 +390,7 @@ class UserController extends Controller
         $user->description = $description;
         $user->address = $address;
         $avatar = $request->file("avatar");
-        $background = $request->file("background_image");
+        $background = $request->file("cover_image");
 
         // kiểm tra xem có file ảnh không
         if ($request->hasFile('avatar')) {
@@ -413,9 +413,9 @@ class UserController extends Controller
             } 
         }
 
-        if ($request->hasFile('background_image')) {
+        if ($request->hasFile('cover_image')) {
             $allowedfileExtension = ['jpg', 'png'];
-            $files = $request->file('background_image');
+            $files = $request->file('cover_image');
 
             // flag xem có thực hiện lưu DB không. Mặc định là có
             // $exe_flg = true;
@@ -442,7 +442,7 @@ class UserController extends Controller
         if ($background != null) {
             $backgroundName = $background->store("", "google");
             $backgroundUrl  = Storage::disk('google')->url($backgroundName);
-            $user->background_image = $backgroundUrl;
+            $user->cover_image = $backgroundUrl;
         }
 
         $user->save();
@@ -456,7 +456,7 @@ class UserController extends Controller
                 "address" => $user->address,
                 "description" => $user->description,
                 "avatar" => $user->avatar,
-                "background_image" => $user->background_image
+                "cover_image" => $user->cover_image
             ]
         ];
     }
