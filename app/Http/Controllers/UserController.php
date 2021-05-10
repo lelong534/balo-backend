@@ -62,35 +62,28 @@ class UserController extends Controller
     {
         $index = $request->index;
         $count = $request->count;
-        if ($index == '' || $count == '') {
-            return [
-                "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
-                "message" => "Parameter not enough"
-            ];
-        } else {
-            $user = $request->user();
-            $result = [];
-            $count = (int)$count;
-            $index = (int)$index;
-            $requestedFriends = array_slice($user->getFriends(), $count * $index, $count);
-            foreach ($requestedFriends as $item) {
-                array_push($result, [
-                    "id" => $item->id,
-                    "username" => $item->name,
-                    "avatar" => $item->avatar,
-                    "same_friends" => $user->getSameFriends($item->id),
-                    "created" => $item->created_at,
-                ]);
-            };
-            return [
-                "code" => ApiStatusCode::OK,
-                "message" => "OK",
-                "data" => [
-                    "friends" => $result,
-                    "total" => count($result)
-                ]
-            ];
-        }
+        
+        $user = $request->user();
+        $result = [];
+        $count = !$index ? 50 : (int)$count;
+        $index = !$index ? 0 : (int)$index;
+        $requestedFriends = array_slice($user->getFriends(), $index, $count);
+        foreach ($requestedFriends as $item) {
+            array_push($result, [
+                "id" => $item->id,
+                "username" => $item->name,
+                "avatar" => $item->avatar,
+                "created" => $item->created_at,
+            ]);
+        };
+        return [
+            "code" => ApiStatusCode::OK,
+            "message" => "OK",
+            "data" => [
+                "friends" => $result,
+                "total" => count($result)
+            ]
+        ];
     }
 
     public function getSuggestedFriends(Request $request)
