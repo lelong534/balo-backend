@@ -26,7 +26,7 @@ class UserController extends Controller
     {
         $index = $request->index;
         $count = $request->count;
-        if ($index == '' || $count == '') {
+        if ($index == null || $count == null) {
             return [
                 "code" => ApiStatusCode::PARAMETER_NOT_ENOUGH,
                 "message" => "Parameter not enough"
