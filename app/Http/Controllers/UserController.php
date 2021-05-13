@@ -175,7 +175,7 @@ class UserController extends Controller
         $user = $request->user();
         $user_id = (int)$request->user_id;
         $is_accept = (int)$request->is_accepted;
-        if ($user_id == null || $is_accept == null) {
+        if ($user_id === null || $is_accept === null) {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
                 "message" => "PARAMETER TYPE INVALID"
