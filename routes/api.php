@@ -25,7 +25,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('/user/get_requested_friends', "UserController@getRequestedFriends")->name("get_requested_friends");
     Route::post('/user/set_request_friends', "UserController@setRequestFriends")->name("set_request_friend");
     Route::post('/user/get_user_friends', "UserController@getFriends")->name("get_user_friends");
-    Route::get('/user/get_list_suggested_friends', "UserController@getSuggestedFriends")->name("get_list_suggested_friends");
+    Route::post('/user/get_suggested_friends', "UserController@getSuggestedFriends")->name("get_suggested_friends");
     Route::post('/user/set_accept_friend', "UserController@setFriends")->name("set_accept_friend");
     Route::post("/logout", 'AuthController@logout')->name("Logout");
     Route::post("/change_password", "AuthController@changePassword")->name("change_password");
