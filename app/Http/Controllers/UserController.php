@@ -102,19 +102,25 @@ class UserController extends Controller
             $count = (int)$count;
             $index = (int)$index;
             $friends = $request->user()->getFriends();
+            $listFriendId = [];
             foreach ($friends as $friend) {
-                $suggestedFriends = array_merge($suggestedFriends, $friend->getFriends());
+                array_push($listFriendId, 40);
             };
-            $suggestedFriends = array_slice($suggestedFriends, $count * $index, $count);
+            // return $friends[0]["id"];
+            array_push($listFriendId, $user->id);
+
+            $suggestedFriends = User::all()->except($listFriendId);
+
             foreach ($suggestedFriends as $item) {
                 array_push($result, [
                     "id" => $item->id,
                     "username" => $item->name,
                     "avatar" => $item->avatar,
-                    "same_friends" => $user->getSameFriends($item->id),
                     "created" => $item->created_at,
                 ]);
             };
+
+            $result = array_slice($result, $index, $count); 
             return [
                 "code" => ApiStatusCode::OK,
                 "message" => "OK",
