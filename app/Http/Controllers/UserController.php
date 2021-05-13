@@ -101,7 +101,7 @@ class UserController extends Controller
             $suggestedFriends = [];
             $count = (int)$count;
             $index = (int)$index;
-            $friends = Friends::where("user_id", "=", $user->id)->get();
+            $friends = Friends::where("friend_id", "=", $user->id)->get();
             $listFriendId = [];
             foreach ($friends as $friend) {
                 array_push($listFriendId, $friend["friend_id"]);
