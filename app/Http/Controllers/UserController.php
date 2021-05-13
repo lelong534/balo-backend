@@ -104,7 +104,7 @@ class UserController extends Controller
             $friends = Friends::where("friend_id", "=", $user->id)->get();
             $listFriendId = [];
             foreach ($friends as $friend) {
-                array_push($listFriendId, $friend["friend_id"]);
+                array_push($listFriendId, $friend["user_id"]);
             };
             // return $friends[0]["id"];
             array_push($listFriendId, $user->id);
