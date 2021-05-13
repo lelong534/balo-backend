@@ -90,7 +90,7 @@ class UserController extends Controller
     {
         $index = $request->index;
         $count = $request->count;
-        if ($index == '' || $count == '') {
+        if ($index === '' || $count === '') {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
                 "message" => "PARAMETER TYPE INVALID"
