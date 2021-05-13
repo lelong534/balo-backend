@@ -158,8 +158,8 @@ class UserController extends Controller
                     ->where("friend_id", (int)$user_id)->get();
                 if ($relation->isEmpty()) {
                     Friends::create([
-                        "user_id" => $user->id,
-                        "friend_id" => (int)$user_id,
+                        "user_id" => (int)$user_id,
+                        "friend_id" => $user->id,
                         "status" => FriendStatus::REQUESTED
                     ]);
                 } else {

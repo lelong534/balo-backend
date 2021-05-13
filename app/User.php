@@ -118,7 +118,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getFriendRequest()
     {
-        $friendsInfo = Friends::where("friend_id", $this->id)
+        $friendsInfo = Friends::where("user_id", $this->id)
             ->where('status', FriendStatus::REQUESTED)->get();
         $friends = [];
         foreach ($friendsInfo as $friendInfo) {
