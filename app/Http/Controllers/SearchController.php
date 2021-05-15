@@ -7,8 +7,8 @@ use App\Post;
 use App\User;
 use App\Comment;
 use App\Search;
-use App\ApiStatusCode;
 use App\URL;
+use App\Enums\ApiStatusCode;
 use Illuminate\Support\Facades\Validator;
 
 class SearchController extends Controller
@@ -20,7 +20,7 @@ class SearchController extends Controller
         $keyword = $request->keyword;
         $currentUser = $request->user();
 
-        if ($index === '' || $count === '' || $keyword === '') {
+        if ($index === null || $count === null || $keyword === null) {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
                 "message" => "Tham số không đầy đủ"
@@ -55,7 +55,7 @@ class SearchController extends Controller
 
         if($result == null) {
             return [
-                "code" => ApiStatusCode::NO_DATA,
+                "code" => 9994,
                 "message" => "User not found"
             ];
         } else {
