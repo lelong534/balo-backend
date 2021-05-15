@@ -39,13 +39,14 @@ class CommentController extends Controller
         }
         $user_id = $request->user()->id;
         $post = Post::find($id);
+        $post["comment"] += 1;
         $comment = new Comment([
             'user_id' => $user_id,
             'post_id' => $id,
             'content' => $content,
 
         ]);
-        if ($comment->save()) {
+        if ($comment->save() && $post->save()) {
             return response()->json(
                 [
                     'code' => ApiStatusCode::OK,
