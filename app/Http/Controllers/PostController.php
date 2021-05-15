@@ -98,7 +98,9 @@ class PostController extends Controller
 		$post = new Post([
             'user_id' => $user->id,
             'described' => $request['described'],
-            'like' => 0
+            'like' => 0,
+            'comment' => 0,
+            'is_hidden' => 0
         ]);
 
         if ($post->save()) {
