@@ -21,27 +21,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phonenumber'
+        'name', 'email', 'phonenumber'
     ];
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::creating(function ($post) {
-    //         $post->{$post->getKeyName()} = (string) Str::uuid();
-    //     });
-    // }
-
-    // public function getIncrementing()
-    // {
-    //     return false;
-    // }
-
-    // public function getKeyType()
-    // {
-    //     return 'string';
-    // }
 
     /**
      * The attributes that should be hidden for arrays.

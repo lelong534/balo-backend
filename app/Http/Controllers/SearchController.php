@@ -15,84 +15,60 @@ class SearchController extends Controller
 {
     public function search(Request $request) {
 
-        $user_id = $request->query('user_id');
-        $index = $request->query("index");
-        $count = $request->query("count");
-        $keyword = $request->query("keyword");
-        $user = $request->user();
+        $index = $request->index;
+        $count = $request->count;
+        $keyword = $request->keyword;
+        $currentUser = $request->user();
 
-        if ($user_id == '' || $user->id == (int) $user_id || (int) $user_id < 0) {
+        if ($index === '' || $count === '' || $keyword === '') {
+            return [
+                "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
+                "message" => "Tham số không đầy đủ"
+            ];
+        }
+
+        if( (int) $index < 0 || (int) $count < 0) {
             return [
                 "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
                 "message" => "PARAMETER TYPE INVALID"
             ];
-        } 
-        else 
-        {
-            if(!User::find($user_id) || User::find($user_id)->isBlocked()) {
-                return [
-                    "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                    "message" => "User is not validated"
-                ];
-            }
-
-            if ($index == '' || $count == '' || $keyword == '') {
-                return [
-                    "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                    "message" => "PARAMETER TYPE INVALID"
-                ];
-            }
-
-            if( (int) $index < 0 || (int) $count < 0) {
-                return [
-                    "code" => ApiStatusCode::PARAMETER_TYPE_INVALID,
-                    "message" => "PARAMETER TYPE INVALID"
-                ];
-            }
         }
 
         $index = (int) $index;
         $count = (int) $count;
         $result = [];
 
-        $postBySearch = Post::where('content', 'LIKE', "%$keyword%")->get();
+        $user = User::where('name', 'like', '%'.$keyword.'%')
+            ->orWhere('phone_number', 'like', '%'.$keyword.'%')
+            ->orWhere('email', 'like', '%'.$keyword.'%')
+            ->get();
 
-        $search = new Search ([
-            'user_id' => $user->id,
-            'keyword' => $keyword,
-            'index' => $index
-        ]);
+        foreach ($user as $item) {
+            array_push($result, [
+                "id" => $item->id,
+                "username" => $item->name,
+                "avatar" => $item->avatar,
+                "email" => $item->email,
+                "phonenumber" => $item->phone_number,
+            ]);
+        };
 
-        $search -> save();
-
-        if($postBySearch == null) {
+        if($result == null) {
             return [
                 "code" => ApiStatusCode::NO_DATA,
-                "message" => "Post not found"
+                "message" => "User not found"
             ];
         } else {
-            $postBySearch = array_slice($postBySearch, $count * $index, $count);
-            foreach ($postBySearch as $item) {
-                array_push($result, [
-                    'id' => $item->id,
-                    'image' => $item->image_link,
-                    'video' => $item->video_link,
-                    'like' => $item->like,
-                    'described' => $item->content,
-                    'comment' => Comment::where('id', $item->id)->count(),
-                    'author' => User::where('id', $item->user_id)->get('id', 'username', 'avatar'),
-
-                ]);
-            };
+            // $result = array_slice($result, $index, $count);
+            
             return [
-                "code" => ApiStatusCode::OK,
+                "code" => 1000,
                 "message" => "OK",
                 "data" => [
-                    "list_posts" => $result
+                    "users" => $result
                 ]
             ];
         }
-
     }
 
     public function getSavedSearch(Request $request) {
