@@ -450,7 +450,7 @@ class UserController extends Controller
             "message" => "OK",
             "data" => [
                 "id" => $user->id,
-                "username" => $user->name,
+                "name" => $user->name,
                 "phonenumber" => $user->phone_number,
                 "address" => $user->address,
                 "description" => $user->description,
