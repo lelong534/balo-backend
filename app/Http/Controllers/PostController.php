@@ -109,8 +109,9 @@ class PostController extends Controller
 				$i = 1;
 				foreach ($request->file('image') as $image) {
 
-                    $imageName = $image->store('images', 's3');
-                    $imageUrl = Storage::disk('s3')->response('' . $imageName);
+                    $imageName = $image->store('', 's3');
+                    Storage::disk('s3')->setVisibility($imageName, 'public');
+                    $imageUrl = Storage::disk('s3')->url('' . $imageName);
 					
 		        	$saveImage = new Image([
 			        	'post_id' => $post->id,
@@ -131,8 +132,9 @@ class PostController extends Controller
             if($request->hasFile('video')) {
                 $video = $request->file('video');
                 // $video->storeAs('video', $video->getClientOriginalName());
-                $videoName = $image->store('videos', 's3');
-                $videoUrl  = Storage::disk('s3')->response('' . $videoName);
+                $videoName = $image->store('', 's3');
+                Storage::disk('s3')->setVisibility($videoName, 'public');
+                $videoUrl  = Storage::disk('s3')->url('' . $videoName);
                 
                 $saveVideo = new Video([
                     'post_id' => $post->id,
