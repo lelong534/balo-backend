@@ -433,14 +433,16 @@ class UserController extends Controller
         }
 
         if ($avatar != null) {
-            $avatarName = $avatar->store("", "google");
-            $avatarUrl  = Storage::disk('google')->url($avatarName);
+            $avatarName = $avatar->store('', 's3');
+            Storage::disk('s3')->setVisibility($avatarName, 'public');
+            $avatarUrl = Storage::disk('s3')->url('' . $avatarName);
             $user->avatar = $avatarUrl;
         }
 
         if ($background != null) {
-            $backgroundName = $background->store("", "google");
-            $backgroundUrl  = Storage::disk('google')->url($backgroundName);
+            $backgroundName = $background->store('', 's3');
+            Storage::disk('s3')->setVisibility($backgroundName, 'public');
+            $backgroundUrl = Storage::disk('s3')->url('' . $backgroundName);
             $user->cover_image = $backgroundUrl;
         }
 
