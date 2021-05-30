@@ -110,7 +110,7 @@ class PostController extends Controller
 				foreach ($request->file('image') as $image) {
 
                     $imageName = $image->store('images', 's3');
-                    $imageUrl = Storage::disk('s3')->response('images/' . $imageName);
+                    $imageUrl = Storage::disk('s3')->response('' . $imageName);
 					
 		        	$saveImage = new Image([
 			        	'post_id' => $post->id,
@@ -132,7 +132,7 @@ class PostController extends Controller
                 $video = $request->file('video');
                 // $video->storeAs('video', $video->getClientOriginalName());
                 $videoName = $image->store('videos', 's3');
-                $videoUrl  = Storage::disk('s3')->url($videoName);
+                $videoUrl  = Storage::disk('s3')->response('' . $videoName);
                 
                 $saveVideo = new Video([
                     'post_id' => $post->id,
