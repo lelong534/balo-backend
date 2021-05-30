@@ -110,7 +110,7 @@ class PostController extends Controller
 				foreach ($request->file('image') as $image) {
 
                     $imageName = $image->store('images', 's3');
-                    $imageUrl = Storage::disk('s3')->url($imageName);
+                    $imageUrl = Storage::disk('s3')->response('images/' . $imageName);
 					
 		        	$saveImage = new Image([
 			        	'post_id' => $post->id,
