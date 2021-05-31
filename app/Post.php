@@ -10,7 +10,7 @@ class Post extends Model
     //
     protected $table = 'posts';
     protected $fillable = [
-        'id', 'user_id', 'described', 'like'
+        'id', 'user_id', 'described', 'like', 'comment', 'is_hidden'
     ];
 
     public function images() {
