@@ -385,7 +385,7 @@ class UserController extends Controller
         } 
 
         $user->name = !$request->username ? $user->name : $request->username;
-        $user->phone_number = !$request->phonenumber ? $user->phonenumber : $request->phonenumber;
+        $user->phone_number = !$request->phonenumber ? $user->phone_number : $request->phonenumber;
         $user->description = !$request->description ? $user->description : $request->description;
         $user->address = !$request->address ? $user->address : $request->address;
         $avatar = $request->file("avatar");
