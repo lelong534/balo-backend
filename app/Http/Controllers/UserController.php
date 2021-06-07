@@ -369,8 +369,8 @@ class UserController extends Controller
         $phonenumber = $request->phonenumber;
 
         $fileValidator = Validator::make($request->all(), [
-            'avatar' => 'file|max:1024',
-            'cover_image' => 'file|max:1024'
+            'avatar' => 'file|max:5000',
+            'cover_image' => 'file|max:5000'
         ]);
         if ($fileValidator->fails()) {
             return [
