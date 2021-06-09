@@ -397,7 +397,8 @@ class PostController extends Controller
             $list_posts = Post::with('images', 'author', 'likes')
                         ->with('videos')
                         ->where('user_id', $user_id)
-                        ->where('id', '>', $index)
+                        // ->where('id', '>', $index)
+                        ->skip($index)
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
                         ->get();
@@ -412,7 +413,8 @@ class PostController extends Controller
         } else {
             $list_posts = Post::with('images', 'author', 'likes')
                         ->with('videos')
-                        ->where('id', '>', $index)
+                        // ->where('id', '>', $index)
+                        ->skip($index)
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
                         ->get();
