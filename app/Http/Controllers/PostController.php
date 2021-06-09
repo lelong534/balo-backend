@@ -425,8 +425,8 @@ class PostController extends Controller
                 }
             }
         }
-        if ($list_posts != null && $list_posts->first() != null) 
-            $new_last_id = $list_posts->first()->id;
+        if ($list_posts != null && $list_posts->last() != null) 
+            $new_last_id = $list_posts->last()->id;
         else $new_last_id = $last_id === null ? 0 : $last_id;
 
         return response()->json([
