@@ -65,7 +65,7 @@ class SearchController extends Controller
                 "code" => 1000,
                 "message" => "OK",
                 "data" => [
-                    "users" => $result
+                    "friends" => $result
                 ]
             ];
         }
