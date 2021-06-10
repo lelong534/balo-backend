@@ -49,7 +49,7 @@ class SearchController extends Controller
                 "username" => $item->name,
                 "avatar" => $item->avatar,
                 "email" => $item->email,
-                "phonenumber" => $item->phone_number,
+                "phone_number" => $item->phone_number,
             ]);
         };
 
