@@ -252,6 +252,18 @@ class UserController extends Controller
         }
     }
 
+    public function getUserById(Request $request)
+    {
+        $user = User::where("id", $request->user_id)->first();
+        if ($user == null) {
+            return [
+                "code" => 9994,
+                "message" => "User not found"
+            ];
+        }  
+        else return $user;
+    }
+
     public function setReadNotification(Request $request)
     {
         $notificationId = $request->query("notification_id");
