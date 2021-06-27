@@ -38,10 +38,6 @@ class PostController extends Controller
             ]);
         }
 
-        $validator = Validator::make($request->all(), [
-            'video' => 'mimes:mp4|nullable',
-        ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'code' => ApiStatusCode::PARAMETER_TYPE_INVALID,
