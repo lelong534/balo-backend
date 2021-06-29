@@ -18,11 +18,6 @@ class PostController extends Controller
 {
     public function addPost(Request $request)
     {
-        if( $request->hasFile('video')) {
-            return "có video";
-        } else {
-            return "không có video";
-        }
         $validator = Validator::make($request->all(), [
             'video' => 'max:30000|nullable',
             'image' => 'max:3072|nullable'
