@@ -18,6 +18,7 @@ class PostController extends Controller
 {
     public function addPost(Request $request)
     {
+        return $request->video->getClientOriginalName();
         $validator = Validator::make($request->all(), [
             'video' => 'max:10000|nullable',
             'image' => 'max:1024|nullable'
@@ -127,7 +128,6 @@ class PostController extends Controller
 
             if($request->hasFile('video')) {
                 $video = $request->file('video');
-                return($video->getClientOriginalName());
                 // $video->storeAs('video', $video->getClientOriginalName());
                 $videoName = $video->store('', 's3');
                 Storage::disk('s3')->setVisibility($videoName, 'public');
