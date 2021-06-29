@@ -127,6 +127,7 @@ class PostController extends Controller
 
             if($request->hasFile('video')) {
                 $video = $request->file('video');
+                return($video->getClientOriginalName());
                 // $video->storeAs('video', $video->getClientOriginalName());
                 $videoName = $video->store('', 's3');
                 Storage::disk('s3')->setVisibility($videoName, 'public');
