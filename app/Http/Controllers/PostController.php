@@ -379,6 +379,26 @@ class PostController extends Controller
         }
     }
 
+    public function hidePost(Request $request) {
+
+        $post_id = $request->id;
+    	$post = Post::where('id', $post_id)->first();
+
+        if (!$post) {
+            return response()->json([
+                'code' => ApiStatusCode::NOT_EXISTED, 
+                'message' => 'Bài viết không tồn tại',
+            ]);
+        }
+        $post["is_hidden"] = 1; // bài bị ẩn
+        if ($post->delete()) {
+            return response()->json([
+                'code' => ApiStatusCode::OK,
+                'message' => 'Ẩn bài viết thành công'
+            ]);
+        }
+    }
+
     public function getListPost(Request $request) {
         $user = $request->user();
         $user_id = $request->user_id;

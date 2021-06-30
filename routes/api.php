@@ -41,6 +41,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('delete_post', 'PostController@deletePost')->name("delete_post");
     Route::post('get_list_posts', 'PostController@getListPost')->name("get_list_posts");
     Route::get('check_new_item', 'PostController@checkNewItem')->name("check_new_item");
+    Route::post('hide_post', 'PostController@hidePost');
 
     Route::post("/set_user_info", "UserController@setUserInfo")->name("set_user_info");
 
