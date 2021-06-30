@@ -4,7 +4,7 @@ namespace App;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
-class UserLikePost extends Model
+class UserHidePost extends Model
 {
     protected $table = 'user_hide_post';
     protected $fillable = [
