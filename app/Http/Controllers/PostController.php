@@ -352,7 +352,8 @@ class PostController extends Controller
     			'described' => $post->described,
     			'created' => $post->created_at,
     			'modified' => $post->updated_at,
-    			'like' => $post->like
+    			'like' => $post->like,
+                'comment' => $post->comment,
     		],
     		'image' => $images,
             'video' => $videos,
