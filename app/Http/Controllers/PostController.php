@@ -8,6 +8,7 @@ use App\Image;
 use App\Video;
 use App\Comment;
 use App\User;
+use App\UserHidePost;
 use JWTAuth;
 use App\Enums\ApiStatusCode;
 use App\Enums\URL;
@@ -435,12 +436,23 @@ class PostController extends Controller
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
                         ->get();
+
+            $list_hide_posts = UserHidePost::get();
             foreach($list_posts as $key => $postItem) {
                 $postItem["isLiked"] = false;
+                $postItem["isHide"] = false;
                 $like_post = $postItem["likes"];
                 foreach ($like_post as $userLike) {
-                    if($userLike["user_id"] == $user->id) $postItem["isLiked"] = true;
-                    break;
+                    if($userLike["user_id"] == $user->id) {
+                        $postItem["isLiked"] = true;
+                        break;
+                    }
+                }
+                foreach ($list_hide_posts as $userHide) {
+                    if($userHide["user_id"] == $user->id && $postItem["id"] == $userHide["post_id"]) {
+                        $postItem["isHide"] = true;
+                        break;
+                    }
                 }
             }
         }
