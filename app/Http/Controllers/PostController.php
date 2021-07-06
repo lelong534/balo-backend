@@ -10,6 +10,7 @@ use App\Comment;
 use App\User;
 use App\UserHidePost;
 use JWTAuth;
+use App\Block;
 use App\Enums\ApiStatusCode;
 use App\Enums\URL;
 use Illuminate\Support\Facades\Validator;
@@ -415,7 +416,6 @@ class PostController extends Controller
             $list_posts = Post::with('images', 'author', 'likes')
                         ->with('videos')
                         ->where('user_id', $user_id)
-                        // ->where('id', '>', $index)
                         ->skip($index)
                         ->orderBy('updated_at', 'desc')
                         ->limit($count)
@@ -437,10 +437,12 @@ class PostController extends Controller
                         ->limit($count)
                         ->get();
 
-            $list_hide_posts = UserHidePost::get();
+            $list_hide_posts = UserHidePost::where("user_id", $user->id)->get();
+            $list_block      = Block::where("blocker_id", $user->id)->get();
             foreach($list_posts as $key => $postItem) {
                 $postItem["isLiked"] = false;
                 $postItem["isHide"] = false;
+                $postItem["isBlock"] = false;
                 $like_post = $postItem["likes"];
                 foreach ($like_post as $userLike) {
                     if($userLike["user_id"] == $user->id) {
@@ -452,6 +454,11 @@ class PostController extends Controller
                     if($userHide["user_id"] == $user->id && $postItem["id"] == $userHide["post_id"]) {
                         $postItem["isHide"] = true;
                         break;
+                    }
+                }
+                foreach($list_block as $block) {
+                    if($postItem["author"]["id"] == $block["user_id"]) {
+                        $postItem["isBlock"] = true;
                     }
                 }
             }

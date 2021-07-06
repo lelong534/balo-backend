@@ -495,50 +495,40 @@ class UserController extends Controller
         ];
     }
 
-    public function setBlock(Request $request, $user_id)
+    public function setBlock(Request $request)
     {
-        $validator = Validator::make($request->query(), [
-            "type" => "required|numeric"
+        $user_id = $request->user_id;
+        $user = $request->user();
+
+        $block = new Block([
+            'blocker_id' => $user->id,
+            'user_id' => $user_id,
         ]);
-        if ($validator->fails()) {
+        $user = User::find($user_id);
+        if ($user == null) {
             return [
-                "code" => 1003,
-                "message" => "Parameter type is invalid",
-                "data" => $validator->errors()
+                "code" => 9992,
+                "message" => "Người dùng không tồn tại"
             ];
-        } else {
-            $type = (int)$request->query("type");
-            $user_id = (int)$user_id;
-            if ($type != 0 && $type != 1) {
-                return [
-                    "code" => 1003,
-                    "message" => "Trường Type có giá trị sai"
-                ];
-            } else if (!User::find($user_id) || User::find($user_id)->isBlocked()) {
-                return [
-                    "code" => 1003,
-                    "message" => "User với id " . $user_id . " đã bị khóa hoặc không tồn tại"
-                ];
-            } else {
-                $block = Block::where("blocker_id", $user_id)
-                    ->where("user_id", $request->user()->id)->get();
-                if (!$block->isEmpty()) {
-                    if ($type == 1) {
-                        $block[0]->delete();
-                    }
-                } else {
-                    $block = new Block([
-                        "blocker_id" => $user_id,
-                        "user_id" => $request->user()->id
-                    ]);
-                    $block->save();
-                }
-                return [
-                    "code" => ApiStatusCode::OK,
-                    "message" => "OK"
-                ];
-            }
         }
+
+        if ($block->save()) {
+            return response()->json(
+                [
+                    'code' => ApiStatusCode::OK,
+                    'message' => 'Đã chặn người dùng',
+                    'data' => [
+                        'user' => $user,
+                    ]
+                ]
+
+            );
+        } else return response()->json(
+            [
+                'code' => ApiStatusCode::LOST_CONNECTED,
+                'message' => 'Lỗi mất kết nối DB/ hoặc lỗi thực thi câu lệnh DB'
+            ]
+        );
     }
 
     public function testSaveFile(Request $request)

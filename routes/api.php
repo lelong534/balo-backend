@@ -57,7 +57,7 @@ Route::middleware(['verify-token', 'auth:api', 'user-blocked'])->group(function 
     Route::post('un_like', 'UserLikePostController@unLikePost')->name("un_like_post");
     Route::post('get_comment', 'CommentController@getComment')->name("get_comment");
     Route::post('add_comment', 'CommentController@addComment')->name("set_comment");
-    Route::post("user/block/{user_id}", "UserController@setBlock")->name("set_block");
+    Route::post("block", "UserController@setBlock")->name("set_block");
 
     Route::post('search', 'SearchController@search')->name("search");
     Route::post('get_saved_search', 'SearchController@getSavedSearch')->name("get_saved_search");
