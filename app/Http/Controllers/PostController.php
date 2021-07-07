@@ -433,7 +433,7 @@ class PostController extends Controller
                         ->with('videos')
                         // ->where('id', '>', $index)
                         ->skip($index)
-                        ->orderBy('updated_at', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->limit($count)
                         ->get();
 
