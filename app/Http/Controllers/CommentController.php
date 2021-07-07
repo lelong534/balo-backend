@@ -71,7 +71,7 @@ class CommentController extends Controller
         $id = $request->id;
         $post = Post::where('id', $id)->first();
         $comments = Comment::where('post_id', $id)
-                    ->orderBy('updated_at', 'asc')
+                    ->orderBy('created_at', 'des')
                     ->get();
         foreach ($comments as $comment) {
             $author = User::where('id', $comment["user_id"])->get()[0];
